@@ -8,13 +8,7 @@ function TodoForm({ onAddTodo }) {
   function handleAddTodo(event) {
     event.preventDefault();
 
-    const trimmedTitle = workingTodoTitle.trim();
-
-    if (!isValidTodoTitle(trimmedTitle)) {
-      return;
-    }
-
-    onAddTodo(trimmedTitle);
+    onAddTodo(workingTodoTitle.trim());
 
     setWorkingTodoTitle('');
   }
@@ -22,17 +16,15 @@ function TodoForm({ onAddTodo }) {
   return (
     <form onSubmit={handleAddTodo}>
       <TextInputWithLabel
-        label="Todo"
-        id="todoTitle"
-        name="todoTitle"
-        placeholder="Todo text"
+        elementId="todoTitle"
+        labelText="Todo"
         value={workingTodoTitle}
         onChange={(event) => setWorkingTodoTitle(event.target.value)}
       />
 
       <button
         type="submit"
-        disabled={!isValidTodoTitle(workingTodoTitle.trim())}
+        disabled={!isValidTodoTitle(workingTodoTitle)}
       >
         Add Todo
       </button>
