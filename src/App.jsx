@@ -1,52 +1,32 @@
-import { useState } from 'react';
-import './App.css';
-import TodoForm from './features/TodoForm';
-import TodoList from './features/TodoList/TodoList';
+import { useEffect, useState } from 'react';
+import TodosPage from './features/Todos/TodosPage';
 
 function App() {
-  const [todoList, setTodoList] = useState([]);
+  const [token, setToken] = useState('');
 
-  function addTodo(todoTitle) {
-    const newTodo = {
-      id: Date.now(),
-      title: todoTitle,
-      isCompleted: false,
-    };
+  useEffect(() => {
+    async function fetchToken() {
+      try {
+        const response = await fetch('/api/auth/csrf-token', {
+          credentials: 'include',
+        });
 
-    setTodoList((previous) => [newTodo, ...previous]);
-  }
+        if (!response.ok) {
+          throw new Error('Failed to fetch CSRF token');
+        }
 
-  function completeTodo(id) {
-    const updatedTodoList = todoList.map((todo) =>
-      todo.id === id
-        ? { ...todo, isCompleted: true }
-        : todo
-    );
+        const data = await response.json();
 
-    setTodoList(updatedTodoList);
-  }
+        setToken(data.token);
+      } catch (error) {
+        console.error(error);
+      }
+    }
 
-  function updateTodo(updatedTodo) {
-    const updatedTodoList = todoList.map((todo) =>
-      todo.id === updatedTodo.id
-        ? updatedTodo
-        : todo
-    );
+    fetchToken();
+  }, []);
 
-    setTodoList(updatedTodoList);
-  }
-
-  return (
-    <div>
-      <TodoForm onAddTodo={addTodo} />
-
-      <TodoList
-        todoList={todoList}
-        onCompleteTodo={completeTodo}
-        onUpdateTodo={updateTodo}
-      />
-    </div>
-  );
+  return <TodosPage token={token} />;
 }
 
 export default App;

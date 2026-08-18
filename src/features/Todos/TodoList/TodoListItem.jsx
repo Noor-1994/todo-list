@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import TextInputWithLabel from '../../shared/TextInputWithLabel';
-import { isValidTodoTitle } from '../../utils/todoValidation';
+import TextInputWithLabel from '../../../shared/TextInputWithLabel';
+import { isValidTodoTitle } from '../../../utils/todoValidation.js';
 
 function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -70,9 +70,14 @@ function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
               onChange={() => onCompleteTodo(todo.id)}
             />
 
-            <span onClick={() => setIsEditing(true)}>
-              {todo.title}
-            </span>
+            <span
+  onClick={() => setIsEditing(true)}
+  style={{
+    textDecoration: todo.isCompleted ? 'line-through' : 'none',
+  }}
+>
+  {todo.title}
+</span>
           </>
         )}
       </form>
