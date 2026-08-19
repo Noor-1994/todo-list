@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import TodosPage from './features/Todos/TodosPage';
+import Logon from './features/Logon';
+import Header from './shared/Header';
 
 function App() {
   const [token, setToken] = useState('');
@@ -26,7 +28,17 @@ function App() {
     fetchToken();
   }, []);
 
-  return <TodosPage token={token} />;
+  return (
+    <>
+      <Header />
+
+      {token ? (
+        <TodosPage token={token} />
+      ) : (
+        <Logon onSetToken={setToken} />
+      )}
+    </>
+  );
 }
 
 export default App;

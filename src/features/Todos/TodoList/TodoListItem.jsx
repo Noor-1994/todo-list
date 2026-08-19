@@ -16,10 +16,6 @@ function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
   }
 
   function handleUpdate(event) {
-    if (!isEditing) {
-      return;
-    }
-
     event.preventDefault();
 
     if (!isValidTodoTitle(workingTitle)) {
@@ -54,8 +50,7 @@ function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
             </button>
 
             <button
-              type="button"
-              onClick={handleUpdate}
+              type="submit"
               disabled={!isValidTodoTitle(workingTitle)}
             >
               Update
@@ -71,13 +66,15 @@ function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
             />
 
             <span
-  onClick={() => setIsEditing(true)}
-  style={{
-    textDecoration: todo.isCompleted ? 'line-through' : 'none',
-  }}
->
-  {todo.title}
-</span>
+              onClick={() => setIsEditing(true)}
+              style={{
+                textDecoration: todo.isCompleted
+                  ? 'line-through'
+                  : 'none',
+              }}
+            >
+              {todo.title}
+            </span>
           </>
         )}
       </form>
