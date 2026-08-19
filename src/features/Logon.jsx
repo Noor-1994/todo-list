@@ -3,11 +3,14 @@ import { useState } from 'react';
 function Logon({ onSetEmail, onSetToken }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [authError, setAuthError] = useState('');
+  const [isLoggingOn, setIsLoggingOn] = useState(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setError('');
+
+    setAuthError('');
+    setIsLoggingOn(true);
 
     try {
       const response = await fetch('/api/users/logon', {
@@ -15,22 +18,27 @@ function Logon({ onSetEmail, onSetToken }) {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify({
           email,
           password,
         }),
       });
 
-      if (!response.ok) {
-        throw new Error('Login failed');
-      }
-
       const data = await response.json();
 
-      onSetEmail(email);
-      onSetToken(data.csrfToken);
+      if (response.status === 200 && data.name && data.csrfToken) {
+        onSetEmail(data.name);
+        onSetToken(data.csrfToken);
+      } else {
+        setAuthError(
+          `Authentication failed: ${data?.message || 'Unknown error'}`
+        );
+      }
     } catch (error) {
-      setError(error.message);
+      setAuthError(`Error: ${error.name} | ${error.message}`);
+    } finally {
+      setIsLoggingOn(false);
     }
   };
 
@@ -38,28 +46,34 @@ function Logon({ onSetEmail, onSetToken }) {
     <main>
       <h2>Log In</h2>
 
-      {error && <p>{error}</p>}
+      {authError && <p>{authError}</p>}
 
       <form onSubmit={handleSubmit}>
-        <label>
+        <label htmlFor="email">
           Email:
-          <input
-            type="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-          />
         </label>
+        <input
+          id="email"
+          type="email"
+          value={email}
+          onChange={(event) => setEmail(event.target.value)}
+          required
+        />
 
-        <label>
+        <label htmlFor="password">
           Password:
-          <input
-            type="password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-          />
         </label>
+        <input
+          id="password"
+          type="password"
+          value={password}
+          onChange={(event) => setPassword(event.target.value)}
+          required
+        />
 
-        <button type="submit">Log In</button>
+        <button type="submit" disabled={isLoggingOn}>
+          {isLoggingOn ? 'Logging in...' : 'Log On'}
+        </button>
       </form>
     </main>
   );
