@@ -1,41 +1,29 @@
-import { useEffect, useState } from 'react';
-import TodosPage from './features/Todos/TodosPage';
-import Logon from './features/Logon';
+import { useState } from 'react';
 import Header from './shared/Header';
+import Logon from './features/Logon';
+import TodosPage from './features/Todos/TodosPage';
 
 function App() {
+  const [email, setEmail] = useState('');
   const [token, setToken] = useState('');
 
-  useEffect(() => {
-    async function fetchToken() {
-      try {
-        const response = await fetch('/api/auth/csrf-token', {
-          credentials: 'include',
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch CSRF token');
-        }
-
-        const data = await response.json();
-
-        setToken(data.token);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-
-    fetchToken();
-  }, []);
 
   return (
     <>
-      <Header />
+      <Header
+        email={email}
+        token={token}
+        onSetEmail={setEmail}
+        onSetToken={setToken}
+      />
 
       {token ? (
         <TodosPage token={token} />
       ) : (
-        <Logon onSetToken={setToken} />
+        <Logon
+          onSetEmail={setEmail}
+          onSetToken={setToken}
+        />
       )}
     </>
   );

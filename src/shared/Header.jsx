@@ -1,18 +1,7 @@
-function Header({ token, onSetToken, onSetEmail }) {
-  function handleLogout() {
-    onSetToken('');
-    onSetEmail('');
-  }
-
+function Header() {
   return (
     <header>
       <h1>Todo List</h1>
-
-      {token && (
-        <button type="button" onClick={handleLogout}>
-          Log Out
-        </button>
-      )}
     </header>
   );
 }
