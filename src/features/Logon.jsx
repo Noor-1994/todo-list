@@ -1,7 +1,10 @@
 import { useState } from 'react';
+import { useAuth } from '../contexts/useAuth';
 
-function Logon({ onSetEmail, onSetToken }) {
-  const [email, setEmail] = useState('');
+function Logon() {
+  const { setEmail, setToken } = useAuth();
+
+  const [email, setLocalEmail] = useState('');
   const [password, setPassword] = useState('');
   const [authError, setAuthError] = useState('');
   const [isLoggingOn, setIsLoggingOn] = useState(false);
@@ -27,16 +30,24 @@ function Logon({ onSetEmail, onSetToken }) {
 
       const data = await response.json();
 
-      if (response.status === 200 && data.name && data.csrfToken) {
-        onSetEmail(data.name);
-        onSetToken(data.csrfToken);
+      if (
+        response.status === 200 &&
+        data.name &&
+        data.csrfToken
+      ) {
+        setEmail(data.name);
+        setToken(data.csrfToken);
       } else {
         setAuthError(
-          `Authentication failed: ${data?.message || 'Unknown error'}`
+          `Authentication failed: ${
+            data?.message || 'Unknown error'
+          }`
         );
       }
     } catch (error) {
-      setAuthError(`Error: ${error.name} | ${error.message}`);
+      setAuthError(
+        `Error: ${error.name} | ${error.message}`
+      );
     } finally {
       setIsLoggingOn(false);
     }
@@ -52,27 +63,38 @@ function Logon({ onSetEmail, onSetToken }) {
         <label htmlFor="email">
           Email:
         </label>
+
         <input
           id="email"
           type="email"
           value={email}
-          onChange={(event) => setEmail(event.target.value)}
+          onChange={(event) =>
+            setLocalEmail(event.target.value)
+          }
           required
         />
 
         <label htmlFor="password">
           Password:
         </label>
+
         <input
           id="password"
           type="password"
           value={password}
-          onChange={(event) => setPassword(event.target.value)}
+          onChange={(event) =>
+            setPassword(event.target.value)
+          }
           required
         />
 
-        <button type="submit" disabled={isLoggingOn}>
-          {isLoggingOn ? 'Logging in...' : 'Log On'}
+        <button
+          type="submit"
+          disabled={isLoggingOn}
+        >
+          {isLoggingOn
+            ? 'Logging in...'
+            : 'Log On'}
         </button>
       </form>
     </main>
