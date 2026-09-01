@@ -1,7 +1,6 @@
 import Header from './shared/Header';
 import Logon from './features/Logon';
 import TodosPage from './features/Todos/TodosPage';
-import { AuthProvider } from './contexts/AuthProvider';
 import { useAuth } from './contexts/useAuth';
 
 function AppContent() {
@@ -21,11 +20,7 @@ function AppContent() {
 }
 
 function App() {
-  return (
-    <AuthProvider>
-      <AppContent />
-    </AuthProvider>
-  );
+  return <AppContent />;
 }
 
 export default App;

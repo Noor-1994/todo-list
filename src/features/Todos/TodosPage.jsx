@@ -27,7 +27,6 @@ function TodosPage() {
     sortBy,
     sortDirection,
     filterTerm,
-    dataVersion,
   } = state;
 
   const debouncedFilterTerm = useDebounce(
@@ -373,11 +372,11 @@ function TodosPage() {
       <TodoForm onAddTodo={addTodo} />
 
       <TodoList
-        todoList={todoList}
-        dataVersion={dataVersion}
-        onCompleteTodo={completeTodo}
-        onUpdateTodo={updateTodo}
-      />
+  todoList={todoList}
+  onCompleteTodo={completeTodo}
+  onUpdateTodo={updateTodo}
+/>
+
     </main>
   );
 }

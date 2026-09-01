@@ -15,41 +15,13 @@ function Logon() {
     setAuthError('');
     setIsLoggingOn(true);
 
-    try {
-      const response = await fetch('/api/users/logon', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify({
-          email,
-          password,
-        }),
-      });
+    const result = await login(email, password);
 
-      const data = await response.json();
-
-      if (
-        response.status === 200 &&
-        data.name &&
-        data.csrfToken
-      ) {
-        login(data.name, data.csrfToken);
-      } else {
-        setAuthError(
-          `Authentication failed: ${
-            data?.message || 'Unknown error'
-          }`
-        );
-      }
-    } catch (error) {
-      setAuthError(
-        `Error: ${error.name} | ${error.message}`
-      );
-    } finally {
-      setIsLoggingOn(false);
+    if (!result.success) {
+      setAuthError(result.error);
     }
+
+    setIsLoggingOn(false);
   };
 
   return (
