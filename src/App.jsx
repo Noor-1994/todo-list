@@ -5,14 +5,14 @@ import { AuthProvider } from './contexts/AuthProvider';
 import { useAuth } from './contexts/useAuth';
 
 function AppContent() {
-  const { token } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   return (
     <>
       <Header />
 
-      {token ? (
-        <TodosPage token={token} />
+      {isAuthenticated ? (
+        <TodosPage />
       ) : (
         <Logon />
       )}

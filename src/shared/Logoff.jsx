@@ -1,15 +1,10 @@
 import { useAuth } from '../contexts/useAuth';
 
 function Logoff() {
-  const { setEmail, setToken } = useAuth();
-
-  function handleLogoff() {
-    setEmail('');
-    setToken('');
-  }
+  const { logout } = useAuth();
 
   return (
-    <button type="button" onClick={handleLogoff}>
+    <button type="button" onClick={logout}>
       Log Off
     </button>
   );

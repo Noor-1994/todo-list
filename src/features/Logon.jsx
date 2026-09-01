@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { useAuth } from '../contexts/useAuth';
 
 function Logon() {
-  const { setEmail, setToken } = useAuth();
+  const { login } = useAuth();
 
-  const [email, setLocalEmail] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [authError, setAuthError] = useState('');
   const [isLoggingOn, setIsLoggingOn] = useState(false);
@@ -35,8 +35,7 @@ function Logon() {
         data.name &&
         data.csrfToken
       ) {
-        setEmail(data.name);
-        setToken(data.csrfToken);
+        login(data.name, data.csrfToken);
       } else {
         setAuthError(
           `Authentication failed: ${
@@ -69,7 +68,7 @@ function Logon() {
           type="email"
           value={email}
           onChange={(event) =>
-            setLocalEmail(event.target.value)
+            setEmail(event.target.value)
           }
           required
         />

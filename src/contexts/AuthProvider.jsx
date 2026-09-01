@@ -5,11 +5,22 @@ export function AuthProvider({ children }) {
   const [email, setEmail] = useState('');
   const [token, setToken] = useState('');
 
+  function login(name, csrfToken) {
+    setEmail(name);
+    setToken(csrfToken);
+  }
+
+  function logout() {
+    setEmail('');
+    setToken('');
+  }
+
   const value = {
     email,
     token,
-    setEmail,
-    setToken,
+    isAuthenticated: Boolean(token),
+    login,
+    logout,
   };
 
   return (

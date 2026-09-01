@@ -2,13 +2,13 @@ import { useAuth } from '../contexts/useAuth';
 import Logoff from './Logoff';
 
 function Header() {
-  const { email, token } = useAuth();
+  const { email, isAuthenticated } = useAuth();
 
   return (
     <header>
       <h1>Todo List</h1>
 
-      {token && (
+      {isAuthenticated && (
         <div>
           <p>Logged in as: {email}</p>
           <Logoff />
