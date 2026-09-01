@@ -27,6 +27,7 @@ function TodosPage() {
     sortBy,
     sortDirection,
     filterTerm,
+    dataVersion,
   } = state;
 
   const debouncedFilterTerm = useDebounce(
@@ -87,7 +88,7 @@ function TodosPage() {
         const isFilterError =
           debouncedFilterTerm ||
           sortBy !== 'createdAt' ||
-          sortDirection !== 'desc';
+          sortDirection !== 'asc';
 
         dispatch({
           type: TODO_ACTIONS.FETCH_ERROR,
@@ -111,6 +112,7 @@ function TodosPage() {
     sortBy,
     sortDirection,
     debouncedFilterTerm,
+    dataVersion,
   ]);
 
   function handleFilterChange(newTerm) {
@@ -372,11 +374,10 @@ function TodosPage() {
       <TodoForm onAddTodo={addTodo} />
 
       <TodoList
-  todoList={todoList}
-  onCompleteTodo={completeTodo}
-  onUpdateTodo={updateTodo}
-/>
-
+        todoList={todoList}
+        onCompleteTodo={completeTodo}
+        onUpdateTodo={updateTodo}
+      />
     </main>
   );
 }

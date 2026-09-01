@@ -52,11 +52,11 @@ export function AuthProvider({ children }) {
 
   async function logout() {
     try {
-      const response = await fetch('/api/users/logout', {
+      const response = await fetch('/api/user/logoff', {
         method: 'POST',
         credentials: 'include',
         headers: {
-          'X-CSRF-Token': token,
+          'X-CSRF-TOKEN': token,
         },
       });
 
