@@ -1,15 +1,12 @@
 import { Routes, Route } from 'react-router';
 import Header from './shared/Header';
 import RequireAuth from './shared/RequireAuth';
-import Logon from './features/Logon';
-import TodosPage from './features/Todos/TodosPage';
+import LoginPage from './pages/LoginPage';
+import TodosPage from './pages/TodosPage';
 import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
 import ProfilePage from './pages/ProfilePage';
-
-function NotFound() {
-  return <h1>404 - Page Not Found</h1>;
-}
+import NotFoundPage from './pages/NotFoundPage';
 
 function App() {
   return (
@@ -17,16 +14,43 @@ function App() {
       <Header />
 
       <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/about" element={<AboutPage />} />
-        <Route path="/login" element={<Logon />} />
+        <Route
+          path="/"
+          element={<HomePage />}
+        />
 
-        <Route element={<RequireAuth />}>
-          <Route path="/todos" element={<TodosPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-        </Route>
+        <Route
+          path="/about"
+          element={<AboutPage />}
+        />
 
-        <Route path="*" element={<NotFound />} />
+        <Route
+          path="/login"
+          element={<LoginPage />}
+        />
+
+        <Route
+          path="/todos"
+          element={
+            <RequireAuth>
+              <TodosPage />
+            </RequireAuth>
+          }
+        />
+
+        <Route
+          path="/profile"
+          element={
+            <RequireAuth>
+              <ProfilePage />
+            </RequireAuth>
+          }
+        />
+
+        <Route
+          path="*"
+          element={<NotFoundPage />}
+        />
       </Routes>
     </>
   );

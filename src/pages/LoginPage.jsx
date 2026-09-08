@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import { useAuth } from '../contexts/useAuth';
 
-function Logon() {
+function LoginPage() {
   const { login, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -76,4 +76,4 @@ function Logon() {
   );
 }
 
-export default Logon;
+export default LoginPage;

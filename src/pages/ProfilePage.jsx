@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/useAuth';
 
 function ProfilePage() {
-  const { email, token } = useAuth();
+  const { name, email, token, isAuthenticated } = useAuth();
 
   const [todoStats, setTodoStats] = useState({
     total: 0,
@@ -16,6 +16,7 @@ function ProfilePage() {
   useEffect(() => {
     async function fetchTodoStats() {
       if (!token) {
+        setLoading(false);
         return;
       }
 
@@ -36,13 +37,10 @@ function ProfilePage() {
         }
 
         if (!response.ok) {
-          throw new Error(
-            'Failed to fetch todos'
-          );
+          throw new Error('Failed to fetch todos');
         }
 
         const data = await response.json();
-
         const todos = data.tasks;
 
         const total = todos.length;
@@ -70,37 +68,73 @@ function ProfilePage() {
     fetchTodoStats();
   }, [token]);
 
+  const completionPercentage =
+    todoStats.total > 0
+      ? Math.round(
+          (todoStats.completed / todoStats.total) * 100
+        )
+      : 0;
+
+  if (loading) {
+    return (
+      <main>
+        <h2>Profile</h2>
+        <p>Loading profile...</p>
+      </main>
+    );
+  }
+
+  if (error) {
+    return (
+      <main>
+        <h2>Profile</h2>
+        <p>{error}</p>
+      </main>
+    );
+  }
+
   return (
     <main>
       <h2>Profile</h2>
 
-      <p>
-        Logged in as: {email}
-      </p>
+      <section>
+        <h3>Account Information</h3>
 
-      {loading && (
-        <p>Loading statistics...</p>
-      )}
+        <p>
+          Name: {name || 'Not available'}
+        </p>
 
-      {error && <p>{error}</p>}
+        <p>
+          Email: {email || 'Not available'}
+        </p>
 
-      {!loading && !error && (
-        <section>
-          <h3>Todo Statistics</h3>
+        <p>
+          Status:{' '}
+          {isAuthenticated
+            ? 'Authenticated'
+            : 'Not authenticated'}
+        </p>
+      </section>
 
-          <p>
-            Total: {todoStats.total}
-          </p>
+      <section>
+        <h3>Todo Statistics</h3>
 
-          <p>
-            Active: {todoStats.active}
-          </p>
+        <p>
+          Total: {todoStats.total}
+        </p>
 
-          <p>
-            Completed: {todoStats.completed}
-          </p>
-        </section>
-      )}
+        <p>
+          Active: {todoStats.active}
+        </p>
+
+        <p>
+          Completed: {todoStats.completed}
+        </p>
+
+        <p>
+          Completion: {completionPercentage}%
+        </p>
+      </section>
     </main>
   );
 }

@@ -3,18 +3,18 @@ import {
   useReducer,
 } from 'react';
 import { useSearchParams } from 'react-router';
-import { useAuth } from '../../contexts/useAuth';
-import TodoForm from './TodoForm';
-import TodoList from './TodoList/TodoList';
-import SortBy from '../../shared/SortBy';
-import FilterInput from '../../shared/FilterInput';
-import StatusFilter from '../../shared/StatusFilter';
-import useDebounce from '../../utils/useDebounce';
+import { useAuth } from '../contexts/useAuth';
+import TodoForm from '../features/Todos/TodoForm';
+import TodoList from '../features/Todos/TodoList/TodoList';
+import SortBy from '../shared/SortBy';
+import FilterInput from '../shared/FilterInput';
+import StatusFilter from '../shared/StatusFilter';
+import useDebounce from '../utils/useDebounce';
 import {
   TODO_ACTIONS,
   initialTodoState,
   todoReducer,
-} from '../../reducers/todoReducer';
+} from '../reducers/todoReducer';
 
 function TodosPage() {
   const { token } = useAuth();

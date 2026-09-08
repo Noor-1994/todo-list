@@ -1,9 +1,9 @@
-import { useAuth } from '../contexts/useAuth';
-import Logoff from './Logoff';
 import Navigation from './Navigation';
+import Logoff from '../features/Logoff';
+import { useAuth } from '../contexts/useAuth';
 
 function Header() {
-  const { email, isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   return (
     <header>
@@ -11,12 +11,7 @@ function Header() {
 
       <Navigation />
 
-      {isAuthenticated && (
-        <div>
-          <p>Logged in as: {email}</p>
-          <Logoff />
-        </div>
-      )}
+      {isAuthenticated && <Logoff />}
     </header>
   );
 }
