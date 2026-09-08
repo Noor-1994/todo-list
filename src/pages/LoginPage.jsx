@@ -12,7 +12,8 @@ function LoginPage() {
   const [authError, setAuthError] = useState('');
   const [isLoggingOn, setIsLoggingOn] = useState(false);
 
-  const from = location.state?.from?.pathname || '/todos';
+  const from =
+    location.state?.from?.pathname || '/todos';
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -28,10 +29,13 @@ function LoginPage() {
 
     const result = await login(email, password);
 
-    if (!result.success) {
-      setAuthError(result.error);
-      setIsLoggingOn(false);
+    if (result.success) {
+      navigate(from, { replace: true });
+      return;
     }
+
+    setAuthError(result.error);
+    setIsLoggingOn(false);
   };
 
   return (
@@ -49,7 +53,9 @@ function LoginPage() {
           id="email"
           type="email"
           value={email}
-          onChange={(event) => setEmail(event.target.value)}
+          onChange={(event) =>
+            setEmail(event.target.value)
+          }
           required
         />
 
@@ -61,7 +67,9 @@ function LoginPage() {
           id="password"
           type="password"
           value={password}
-          onChange={(event) => setPassword(event.target.value)}
+          onChange={(event) =>
+            setPassword(event.target.value)
+          }
           required
         />
 

@@ -21,7 +21,7 @@ function TodosPage() {
 
   const [searchParams] = useSearchParams();
 
-  const status =
+  const statusFilter =
     searchParams.get('status') || 'all';
 
   const [state, dispatch] = useReducer(
@@ -336,17 +336,6 @@ function TodosPage() {
     });
   }
 
-  const filteredTodoList =
-    status === 'active'
-      ? todoList.filter(
-          (todo) => !todo.isCompleted
-        )
-      : status === 'completed'
-        ? todoList.filter(
-            (todo) => todo.isCompleted
-          )
-        : todoList;
-
   return (
     <main>
       <h1>Todos</h1>
@@ -398,9 +387,11 @@ function TodosPage() {
       <TodoForm onAddTodo={addTodo} />
 
       <TodoList
-        todoList={filteredTodoList}
+        todoList={todoList}
         onCompleteTodo={completeTodo}
         onUpdateTodo={updateTodo}
+        dataVersion={dataVersion}
+        statusFilter={statusFilter}
       />
     </main>
   );

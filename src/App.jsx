@@ -1,12 +1,13 @@
+import './App.css';
 import { Routes, Route } from 'react-router';
-import Header from './shared/Header';
-import RequireAuth from './shared/RequireAuth';
-import LoginPage from './pages/LoginPage';
-import TodosPage from './pages/TodosPage';
 import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
+import LoginPage from './pages/LoginPage';
+import TodosPage from './pages/TodosPage';
 import ProfilePage from './pages/ProfilePage';
 import NotFoundPage from './pages/NotFoundPage';
+import RequireAuth from './components/RequireAuth';
+import Header from './shared/Header';
 
 function App() {
   return (
@@ -14,20 +15,11 @@ function App() {
       <Header />
 
       <Routes>
-        <Route
-          path="/"
-          element={<HomePage />}
-        />
+        <Route path="/" element={<HomePage />} />
 
-        <Route
-          path="/about"
-          element={<AboutPage />}
-        />
+        <Route path="/about" element={<AboutPage />} />
 
-        <Route
-          path="/login"
-          element={<LoginPage />}
-        />
+        <Route path="/login" element={<LoginPage />} />
 
         <Route
           path="/todos"
@@ -47,10 +39,7 @@ function App() {
           }
         />
 
-        <Route
-          path="*"
-          element={<NotFoundPage />}
-        />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </>
   );
