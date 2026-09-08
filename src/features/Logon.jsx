@@ -1,13 +1,24 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router';
 import { useAuth } from '../contexts/useAuth';
 
 function Logon() {
-  const { login } = useAuth();
+  const { login, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [authError, setAuthError] = useState('');
   const [isLoggingOn, setIsLoggingOn] = useState(false);
+
+  const from = location.state?.from?.pathname || '/todos';
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate(from, { replace: true });
+    }
+  }, [isAuthenticated, navigate, from]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -19,9 +30,8 @@ function Logon() {
 
     if (!result.success) {
       setAuthError(result.error);
+      setIsLoggingOn(false);
     }
-
-    setIsLoggingOn(false);
   };
 
   return (
@@ -39,9 +49,7 @@ function Logon() {
           id="email"
           type="email"
           value={email}
-          onChange={(event) =>
-            setEmail(event.target.value)
-          }
+          onChange={(event) => setEmail(event.target.value)}
           required
         />
 
@@ -53,9 +61,7 @@ function Logon() {
           id="password"
           type="password"
           value={password}
-          onChange={(event) =>
-            setPassword(event.target.value)
-          }
+          onChange={(event) => setPassword(event.target.value)}
           required
         />
 
@@ -63,9 +69,7 @@ function Logon() {
           type="submit"
           disabled={isLoggingOn}
         >
-          {isLoggingOn
-            ? 'Logging in...'
-            : 'Log On'}
+          {isLoggingOn ? 'Logging in...' : 'Log On'}
         </button>
       </form>
     </main>
