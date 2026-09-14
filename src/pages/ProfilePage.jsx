@@ -14,11 +14,14 @@ function ProfilePage() {
 
   useEffect(() => {
     async function fetchTodoStats() {
+      if (!token) return;
+
       try {
         setLoading(true);
         setError('');
 
         const response = await fetch('/api/tasks', {
+          method: 'GET',
           headers: {
             'X-CSRF-TOKEN': token,
           },
@@ -33,14 +36,10 @@ function ProfilePage() {
           throw new Error('Failed to fetch todos');
         }
 
-        const data = await response.json();
+        const todos = await response.json();
 
-        const todos = Array.isArray(data)
-          ? data
-          : data.tasks || [];
-
-        const total = todos.length;
-        const completed = todos.filter(
+        const total = todos.tasks.length;
+        const completed = todos.tasks.filter(
           (todo) => todo.isCompleted
         ).length;
         const active = total - completed;

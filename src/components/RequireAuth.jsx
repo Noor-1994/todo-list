@@ -8,12 +8,14 @@ function RequireAuth({ children }) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!isAuthenticated) {
-      navigate('/login', {
-        state: { from: location },
-        replace: true,
-      });
+    if (isAuthenticated) {
+      return;
     }
+
+    navigate('/login', {
+      state: { from: location },
+      replace: true,
+    });
   }, [isAuthenticated, location, navigate]);
 
   if (!isAuthenticated) {
