@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import { useAuth } from '../contexts/useAuth';
 
 function LoginPage() {
-  const { login, isAuthenticated } = useAuth();
+  const { login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -14,12 +14,6 @@ function LoginPage() {
   const [authError, setAuthError] = useState('');
   const [isLoggingOn, setIsLoggingOn] = useState(false);
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate(from, { replace: true });
-    }
-  }, [isAuthenticated, navigate, from]);
-
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -28,10 +22,11 @@ function LoginPage() {
 
     const result = await login(email, password);
 
-   if (result.success) {
-  setIsLoggingOn(false);
-  return;
-}
+    if (result.success) {
+      setIsLoggingOn(false);
+      navigate(from, { replace: true });
+      return;
+    }
 
     setAuthError(result.error);
     setIsLoggingOn(false);
