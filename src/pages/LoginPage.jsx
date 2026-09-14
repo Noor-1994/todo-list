@@ -7,13 +7,12 @@ function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const from = location.state?.from || '/todos';
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [authError, setAuthError] = useState('');
   const [isLoggingOn, setIsLoggingOn] = useState(false);
-
-  const from =
-    location.state?.from?.pathname || '/todos';
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -45,39 +44,30 @@ function LoginPage() {
       {authError && <p>{authError}</p>}
 
       <form onSubmit={handleSubmit}>
-        <label htmlFor="email">
-          Email:
-        </label>
+        <div>
+          <label htmlFor="email">Email:</label>
+          <input
+            id="email"
+            type="email"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            required
+          />
+        </div>
 
-        <input
-          id="email"
-          type="email"
-          value={email}
-          onChange={(event) =>
-            setEmail(event.target.value)
-          }
-          required
-        />
+        <div>
+          <label htmlFor="password">Password:</label>
+          <input
+            id="password"
+            type="password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            required
+          />
+        </div>
 
-        <label htmlFor="password">
-          Password:
-        </label>
-
-        <input
-          id="password"
-          type="password"
-          value={password}
-          onChange={(event) =>
-            setPassword(event.target.value)
-          }
-          required
-        />
-
-        <button
-          type="submit"
-          disabled={isLoggingOn}
-        >
-          {isLoggingOn ? 'Logging in...' : 'Log On'}
+        <button type="submit" disabled={isLoggingOn}>
+          {isLoggingOn ? 'Logging in...' : 'Log In'}
         </button>
       </form>
     </main>
