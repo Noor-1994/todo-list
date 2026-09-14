@@ -4,14 +4,18 @@ import { useAuth } from '../contexts/useAuth';
 function ProfilePage() {
   const { name, email, token, isAuthenticated } = useAuth();
 
-  const [todos, setTodos] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [todoStats, setTodoStats] = useState({
+    total: 0,
+    completed: 0,
+    active: 0,
+  });
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
-    async function fetchTodos() {
+    async function fetchTodoStats() {
       try {
-        setIsLoading(true);
+        setLoading(true);
         setError('');
 
         const response = await fetch('/api/tasks', {
@@ -21,41 +25,49 @@ function ProfilePage() {
           credentials: 'include',
         });
 
+        if (response.status === 401) {
+          throw new Error('Unauthorized');
+        }
+
         if (!response.ok) {
-          throw new Error('Failed to load todo statistics.');
+          throw new Error('Failed to fetch todos');
         }
 
         const data = await response.json();
 
-        const todoData = Array.isArray(data)
+        const todos = Array.isArray(data)
           ? data
           : data.tasks || [];
 
-        setTodos(todoData);
+        const total = todos.length;
+        const completed = todos.filter(
+          (todo) => todo.isCompleted
+        ).length;
+        const active = total - completed;
+
+        setTodoStats({
+          total,
+          completed,
+          active,
+        });
       } catch (err) {
-        setError(err.message);
+        setError(`Error loading statistics: ${err.message}`);
       } finally {
-        setIsLoading(false);
+        setLoading(false);
       }
     }
 
-    if (isAuthenticated) {
-      fetchTodos();
-    }
-  }, [isAuthenticated, token]);
-
-  const totalTodos = todos.length;
-  const completedTodos = todos.filter(
-    (todo) => todo.isCompleted
-  ).length;
-  const activeTodos = totalTodos - completedTodos;
+    fetchTodoStats();
+  }, [token]);
 
   const completionPercentage =
-    totalTodos > 0
-      ? Math.round((completedTodos / totalTodos) * 100)
+    todoStats.total > 0
+      ? Math.round(
+          (todoStats.completed / todoStats.total) * 100
+        )
       : 0;
 
-  if (isLoading) {
+  if (loading) {
     return (
       <main>
         <h2>Profile</h2>
@@ -79,20 +91,29 @@ function ProfilePage() {
 
       <section>
         <h3>Account Information</h3>
-        <p>Name: {name}</p>
-        <p>Email: {email}</p>
-        <p>Status: {isAuthenticated ? 'Logged in' : 'Logged out'}</p>
+
+        <p>Name: {name || 'Not available'}</p>
+
+        <p>Email: {email || 'Not available'}</p>
+
+        <p>
+          Status:{' '}
+          {isAuthenticated
+            ? 'Authenticated'
+            : 'Not authenticated'}
+        </p>
       </section>
 
       <section>
         <h3>Todo Statistics</h3>
-        <p>Total todos: {totalTodos}</p>
-        <p>Completed todos: {completedTodos}</p>
-        <p>Active todos: {activeTodos}</p>
 
-        {totalTodos > 0 && (
-          <p>Completion: {completionPercentage}%</p>
-        )}
+        <p>Total: {todoStats.total}</p>
+
+        <p>Completed: {todoStats.completed}</p>
+
+        <p>Active: {todoStats.active}</p>
+
+        <p>Completion: {completionPercentage}%</p>
       </section>
     </main>
   );

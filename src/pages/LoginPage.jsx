@@ -7,7 +7,7 @@ function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const from = location.state?.from || '/todos';
+  const from = location.state?.from?.pathname || '/todos';
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -29,7 +29,6 @@ function LoginPage() {
     const result = await login(email, password);
 
     if (result.success) {
-      navigate(from, { replace: true });
       return;
     }
 
