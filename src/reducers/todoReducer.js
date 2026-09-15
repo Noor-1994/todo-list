@@ -15,6 +15,10 @@ export const TODO_ACTIONS = {
   UPDATE_TODO_SUCCESS: 'UPDATE_TODO_SUCCESS',
   UPDATE_TODO_ERROR: 'UPDATE_TODO_ERROR',
 
+  DELETE_TODO_START: 'DELETE_TODO_START',
+  DELETE_TODO_SUCCESS: 'DELETE_TODO_SUCCESS',
+  DELETE_TODO_ERROR: 'DELETE_TODO_ERROR',
+
   SET_SORT: 'SET_SORT',
   SET_FILTER: 'SET_FILTER',
   CLEAR_ERROR: 'CLEAR_ERROR',
@@ -58,7 +62,8 @@ export function todoReducer(state, action) {
         isTodoListLoading: false,
         ...(action.payload.isFilterError
           ? {
-              filterError: action.payload.message,
+              filterError:
+                action.payload.message,
             }
           : {
               error: action.payload.message,
@@ -90,7 +95,8 @@ export function todoReducer(state, action) {
       return {
         ...state,
         todoList: state.todoList.filter(
-          (todo) => todo.id !== action.payload.tempId
+          (todo) =>
+            todo.id !== action.payload.tempId
         ),
         error: action.payload.message,
       };
@@ -102,7 +108,8 @@ export function todoReducer(state, action) {
           todo.id === action.payload.id
             ? {
                 ...todo,
-                isCompleted: true,
+                isCompleted:
+                  action.payload.isCompleted,
               }
             : todo
         ),
@@ -154,17 +161,45 @@ export function todoReducer(state, action) {
         error: action.payload.message,
       };
 
+    case TODO_ACTIONS.DELETE_TODO_START:
+      return {
+        ...state,
+        todoList: state.todoList.filter(
+          (todo) =>
+            todo.id !== action.payload.id
+        ),
+        error: '',
+      };
+
+    case TODO_ACTIONS.DELETE_TODO_SUCCESS:
+      return {
+        ...state,
+        dataVersion: state.dataVersion + 1,
+      };
+
+    case TODO_ACTIONS.DELETE_TODO_ERROR:
+      return {
+        ...state,
+        todoList: [
+          ...state.todoList,
+          action.payload.originalTodo,
+        ],
+        error: action.payload.message,
+      };
+
     case TODO_ACTIONS.SET_SORT:
       return {
         ...state,
         sortBy: action.payload.sortBy,
-        sortDirection: action.payload.sortDirection,
+        sortDirection:
+          action.payload.sortDirection,
       };
 
     case TODO_ACTIONS.SET_FILTER:
       return {
         ...state,
-        filterTerm: action.payload.filterTerm,
+        filterTerm:
+          action.payload.filterTerm,
       };
 
     case TODO_ACTIONS.CLEAR_ERROR:

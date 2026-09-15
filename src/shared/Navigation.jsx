@@ -1,51 +1,52 @@
 import { NavLink } from 'react-router';
-import { useAuth } from '../contexts/useAuth';
 
 function Navigation() {
-  const { isAuthenticated } = useAuth();
-
-  const navLinkStyle = ({ isActive }) => ({
-    fontWeight: isActive ? 'bold' : 'normal',
-    textDecoration: isActive ? 'underline' : 'none',
-  });
-
   return (
-    <nav>
-      <ul
-        style={{
-          listStyle: 'none',
-          display: 'flex',
-          gap: '1rem',
-          padding: 0,
-        }}
-      >
+    <nav className="main-navigation" aria-label="Main navigation">
+      <ul className="navigation-list">
         <li>
-          <NavLink to="/about" style={navLinkStyle}>
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              isActive ? 'nav-link active' : 'nav-link'
+            }
+          >
+            Home
+          </NavLink>
+        </li>
+
+        <li>
+          <NavLink
+            to="/about"
+            className={({ isActive }) =>
+              isActive ? 'nav-link active' : 'nav-link'
+            }
+          >
             About
           </NavLink>
         </li>
 
-        {isAuthenticated ? (
-          <>
-            <li>
-              <NavLink to="/todos" style={navLinkStyle}>
-                Todos
-              </NavLink>
-            </li>
+        <li>
+          <NavLink
+            to="/todos"
+            className={({ isActive }) =>
+              isActive ? 'nav-link active' : 'nav-link'
+            }
+          >
+            Todos
+          </NavLink>
+        </li>
 
-            <li>
-              <NavLink to="/profile" style={navLinkStyle}>
-                Profile
-              </NavLink>
-            </li>
-          </>
-        ) : (
-          <li>
-            <NavLink to="/login" style={navLinkStyle}>
-              Login
-            </NavLink>
-          </li>
-        )}
+        <li>
+          <NavLink
+            to="/profile"
+            className={({ isActive }) =>
+              isActive ? 'nav-link active' : 'nav-link'
+            }
+          >
+            Profile
+          </NavLink>
+        </li>
       </ul>
     </nav>
   );

@@ -1,7 +1,4 @@
-import {
-  useEffect,
-  useReducer,
-} from 'react';
+import { useEffect, useReducer } from 'react';
 import { useSearchParams } from 'react-router';
 import { useAuth } from '../contexts/useAuth';
 import TodoForm from '../features/Todos/TodoForm';
@@ -94,7 +91,7 @@ function TodosPage() {
             todos: data.tasks,
           },
         });
-      } catch (error) {
+      } catch {
         const isFilterError =
           debouncedFilterTerm ||
           sortBy !== 'createdAt' ||
@@ -103,11 +100,9 @@ function TodosPage() {
         dispatch({
           type: TODO_ACTIONS.FETCH_ERROR,
           payload: {
-            message: `Error ${
-              isFilterError
-                ? 'filtering/sorting todos'
-                : 'fetching todos'
-            }: ${error.message}`,
+            message: isFilterError
+              ? 'Unable to filter or sort todos. Please try again.'
+              : 'Unable to load your todos. Please try again.',
             isFilterError,
           },
         });
@@ -177,12 +172,13 @@ function TodosPage() {
           todo: data,
         },
       });
-    } catch (error) {
+    } catch {
       dispatch({
         type: TODO_ACTIONS.ADD_TODO_ERROR,
         payload: {
           tempId: newTodo.id,
-          message: error.message,
+          message:
+            'Unable to add this todo. Please try again.',
         },
       });
     }
@@ -197,10 +193,14 @@ function TodosPage() {
       return;
     }
 
+    const newCompletedStatus =
+      !originalTodo.isCompleted;
+
     dispatch({
       type: TODO_ACTIONS.COMPLETE_TODO_START,
       payload: {
         id,
+        isCompleted: newCompletedStatus,
       },
     });
 
@@ -215,27 +215,28 @@ function TodosPage() {
           },
           credentials: 'include',
           body: JSON.stringify({
-            isCompleted: true,
+            isCompleted: newCompletedStatus,
           }),
         }
       );
 
       if (!response.ok) {
         throw new Error(
-          'Failed to complete todo'
+          'Failed to update todo status'
         );
       }
 
       dispatch({
         type: TODO_ACTIONS.COMPLETE_TODO_SUCCESS,
       });
-    } catch (error) {
+    } catch {
       dispatch({
         type: TODO_ACTIONS.COMPLETE_TODO_ERROR,
         payload: {
           id,
           originalTodo,
-          message: error.message,
+          message:
+            'Unable to update this todo. Please try again.',
         },
       });
     }
@@ -284,13 +285,64 @@ function TodosPage() {
       dispatch({
         type: TODO_ACTIONS.UPDATE_TODO_SUCCESS,
       });
-    } catch (error) {
+    } catch {
       dispatch({
         type: TODO_ACTIONS.UPDATE_TODO_ERROR,
         payload: {
           editedTodo,
           originalTodo,
-          message: error.message,
+          message:
+            'Unable to update this todo. Please try again.',
+        },
+      });
+    }
+  }
+
+  async function deleteTodo(id) {
+    const originalTodo = todoList.find(
+      (todo) => todo.id === id
+    );
+
+    if (!originalTodo) {
+      return;
+    }
+
+    dispatch({
+      type: TODO_ACTIONS.DELETE_TODO_START,
+      payload: {
+        id,
+      },
+    });
+
+    try {
+      const response = await fetch(
+        `/api/tasks/${id}`,
+        {
+          method: 'DELETE',
+          headers: {
+            'X-CSRF-TOKEN': token,
+          },
+          credentials: 'include',
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(
+          'Failed to delete todo'
+        );
+      }
+
+      dispatch({
+        type: TODO_ACTIONS.DELETE_TODO_SUCCESS,
+      });
+    } catch {
+      dispatch({
+        type: TODO_ACTIONS.DELETE_TODO_ERROR,
+        payload: {
+          id,
+          originalTodo,
+          message:
+            'Unable to delete this todo. Please try again.',
         },
       });
     }
@@ -337,62 +389,155 @@ function TodosPage() {
   }
 
   return (
-    <main>
-      <h1>Todos</h1>
-
-      <StatusFilter />
-
-      {error && (
+    <main className="page-container todos-page">
+      <section className="todos-header">
         <div>
-          <p>{error}</p>
+          <p className="eyebrow">
+            Stay organized
+          </p>
 
-          <button onClick={clearError}>
-            Clear Error
-          </button>
+          <h1>My Todos</h1>
+
+          <p className="todos-description">
+            Keep track of your tasks, update them,
+            and stay productive.
+          </p>
         </div>
-      )}
+      </section>
 
-      {filterError && (
-        <div>
-          <p>{filterError}</p>
+      <section
+        className="todos-workspace"
+        aria-label="Todo controls"
+      >
+        <div className="filter-grid">
+          <div className="control-group">
+            <StatusFilter />
+          </div>
 
-          <button onClick={clearFilterError}>
-            Clear Filter Error
-          </button>
+          <div className="control-group">
+            <SortBy
+              sortBy={sortBy}
+              sortDirection={sortDirection}
+              onSortByChange={
+                handleSortByChange
+              }
+              onSortDirectionChange={
+                handleSortDirectionChange
+              }
+            />
+          </div>
 
-          <button onClick={resetFilters}>
-            Reset Filters
-          </button>
+          <div className="control-group control-group-wide">
+            <FilterInput
+              filterTerm={filterTerm}
+              onFilterChange={
+                handleFilterChange
+              }
+            />
+          </div>
         </div>
-      )}
 
-      {isTodoListLoading && (
-        <p>Loading...</p>
-      )}
+        {(error || filterError) && (
+          <div className="feedback-stack">
+            {error && (
+              <div
+                className="error-message"
+                role="alert"
+              >
+                <p>{error}</p>
 
-      <SortBy
-        sortBy={sortBy}
-        sortDirection={sortDirection}
-        onSortByChange={handleSortByChange}
-        onSortDirectionChange={
-          handleSortDirectionChange
-        }
-      />
+                <button
+                  className="secondary-button"
+                  type="button"
+                  onClick={clearError}
+                >
+                  Clear Error
+                </button>
+              </div>
+            )}
 
-      <FilterInput
-        filterTerm={filterTerm}
-        onFilterChange={handleFilterChange}
-      />
+            {filterError && (
+              <div
+                className="error-message"
+                role="alert"
+              >
+                <p>{filterError}</p>
 
-      <TodoForm onAddTodo={addTodo} />
+                <div className="feedback-actions">
+                  <button
+                    className="secondary-button"
+                    type="button"
+                    onClick={
+                      clearFilterError
+                    }
+                  >
+                    Clear Filter Error
+                  </button>
 
-      <TodoList
-        todoList={todoList}
-        onCompleteTodo={completeTodo}
-        onUpdateTodo={updateTodo}
-        dataVersion={dataVersion}
-        statusFilter={statusFilter}
-      />
+                  <button
+                    className="secondary-button"
+                    type="button"
+                    onClick={resetFilters}
+                  >
+                    Reset Filters
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {isTodoListLoading && (
+          <div
+            className="loading-message"
+            role="status"
+          >
+            Loading your todos...
+          </div>
+        )}
+
+        <div className="add-todo-section">
+          <div>
+            <h2>Add a task</h2>
+
+            <p>
+              What would you like to
+              accomplish?
+            </p>
+          </div>
+
+          <TodoForm
+            onAddTodo={addTodo}
+          />
+        </div>
+      </section>
+
+      <section
+        className="todo-list-section"
+        aria-label="Todo list"
+      >
+        <div className="todo-list-header">
+          <h2>Your tasks</h2>
+
+          <span className="todo-count">
+            {todoList.length}{' '}
+            {todoList.length === 1
+              ? 'task'
+              : 'tasks'}
+          </span>
+        </div>
+
+        <div className="todo-list-wrapper">
+          <TodoList
+            todoList={todoList}
+            onCompleteTodo={completeTodo}
+            onUpdateTodo={updateTodo}
+            onDeleteTodo={deleteTodo}
+            dataVersion={dataVersion}
+            statusFilter={statusFilter}
+          />
+        </div>
+      </section>
     </main>
   );
 }

@@ -2,19 +2,24 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/useAuth';
 
 function ProfilePage() {
-  const { name, email, token, isAuthenticated } = useAuth();
+  const { name, email, token, isAuthenticated } =
+    useAuth();
 
   const [todoStats, setTodoStats] = useState({
     total: 0,
     completed: 0,
     active: 0,
   });
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
     async function fetchTodoStats() {
-      if (!token) return;
+      if (!token) {
+        setLoading(false);
+        return;
+      }
 
       try {
         setLoading(true);
@@ -39,9 +44,11 @@ function ProfilePage() {
         const todos = await response.json();
 
         const total = todos.tasks.length;
+
         const completed = todos.tasks.filter(
           (todo) => todo.isCompleted
         ).length;
+
         const active = total - completed;
 
         setTodoStats({
@@ -50,7 +57,9 @@ function ProfilePage() {
           active,
         });
       } catch (err) {
-        setError(`Error loading statistics: ${err.message}`);
+        setError(
+          `Error loading statistics: ${err.message}`
+        );
       } finally {
         setLoading(false);
       }
@@ -62,57 +71,106 @@ function ProfilePage() {
   const completionPercentage =
     todoStats.total > 0
       ? Math.round(
-          (todoStats.completed / todoStats.total) * 100
+          (todoStats.completed /
+            todoStats.total) *
+            100
         )
       : 0;
 
   if (loading) {
     return (
-      <main>
-        <h2>Profile</h2>
-        <p>Loading profile...</p>
+      <main className="page-container simple-page">
+        <section className="simple-page-card">
+          <p className="eyebrow">Your account</p>
+
+          <h1>Profile</h1>
+
+          <p className="loading-message">
+            Loading profile...
+          </p>
+        </section>
       </main>
     );
   }
 
   if (error) {
     return (
-      <main>
-        <h2>Profile</h2>
-        <p>{error}</p>
+      <main className="page-container simple-page">
+        <section className="simple-page-card">
+          <p className="eyebrow">Your account</p>
+
+          <h1>Profile</h1>
+
+          <div
+            className="error-message"
+            role="alert"
+          >
+            <p>{error}</p>
+          </div>
+        </section>
       </main>
     );
   }
 
   return (
-    <main>
-      <h2>Profile</h2>
+    <main className="page-container simple-page">
+      <section className="simple-page-card">
+        <p className="eyebrow">Your account</p>
 
-      <section>
-        <h3>Account Information</h3>
+        <h1>Profile</h1>
 
-        <p>Name: {name || 'Not available'}</p>
+        <div className="profile-section">
+          <h2>Account Information</h2>
 
-        <p>Email: {email || 'Not available'}</p>
+          <div className="profile-info">
+            <p>
+              <strong>Name:</strong>{' '}
+              {name || 'Not available'}
+            </p>
 
-        <p>
-          Status:{' '}
-          {isAuthenticated
-            ? 'Authenticated'
-            : 'Not authenticated'}
-        </p>
-      </section>
+            <p>
+              <strong>Email:</strong>{' '}
+              {email || 'Not available'}
+            </p>
 
-      <section>
-        <h3>Todo Statistics</h3>
+            <p>
+              <strong>Status:</strong>{' '}
+              {isAuthenticated
+                ? 'Authenticated'
+                : 'Not authenticated'}
+            </p>
+          </div>
+        </div>
 
-        <p>Total: {todoStats.total}</p>
+        <div className="profile-section">
+          <h2>Todo Statistics</h2>
 
-        <p>Completed: {todoStats.completed}</p>
+          <div className="profile-stats">
+            <div className="profile-stat">
+              <span>Total</span>
+              <strong>{todoStats.total}</strong>
+            </div>
 
-        <p>Active: {todoStats.active}</p>
+            <div className="profile-stat">
+              <span>Completed</span>
+              <strong>
+                {todoStats.completed}
+              </strong>
+            </div>
 
-        <p>Completion: {completionPercentage}%</p>
+            <div className="profile-stat">
+              <span>Active</span>
+              <strong>{todoStats.active}</strong>
+            </div>
+
+            <div className="profile-stat">
+              <span>Completion</span>
+              <strong>
+                {completionPercentage}%
+              </strong>
+            </div>
+          </div>
+        </div>
       </section>
     </main>
   );
