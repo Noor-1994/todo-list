@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { AuthContext } from './AuthContext';
 
 export function AuthProvider({ children }) {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [token, setToken] = useState('');
 
@@ -28,7 +29,8 @@ export function AuthProvider({ children }) {
         data.name &&
         data.csrfToken
       ) {
-        setEmail(data.name);
+        setName(data.name);
+        setEmail(email);
         setToken(data.csrfToken);
 
         return {
@@ -62,6 +64,7 @@ export function AuthProvider({ children }) {
 
       const data = await response.json();
 
+      setName('');
       setEmail('');
       setToken('');
 
@@ -77,6 +80,7 @@ export function AuthProvider({ children }) {
         data,
       };
     } catch (error) {
+      setName('');
       setEmail('');
       setToken('');
 
@@ -88,6 +92,7 @@ export function AuthProvider({ children }) {
   }
 
   const value = {
+    name,
     email,
     token,
     isAuthenticated,
