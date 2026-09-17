@@ -310,12 +310,11 @@ The demonstration includes:
 - What was most enjoyable to work on
 
 **Demo Video:** Coming soon
-
 ## License
 
-This project was created for educational purposes as part of the Code the Dream React curriculum.
+This project is licensed under the MIT License.
 
-Unless otherwise specified, the project can be used for educational and portfolio purposes.
+It was created for educational purposes as part of the Code the Dream React curriculum.
 
 ## Contact
 
