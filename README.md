@@ -2,7 +2,17 @@
 
 A responsive Todo List application built with React and Vite as part of the Code the Dream React curriculum.
 
-The application allows authenticated users to create, view, complete, edit, delete, filter, and sort their todos through a clean and responsive interface.
+The application allows authenticated users to create, view, complete, edit, delete, filter, search, and sort their todos through a clean and responsive interface.
+
+## Live Demo
+
+Deployment will be added after the application is deployed to Vercel.
+
+**Live Application:** Coming soon
+
+## GitHub Repository
+
+**GitHub Repository:** https://github.com/Noor-1994/todo-list
 
 ## Features
 
@@ -37,6 +47,16 @@ The application allows authenticated users to create, view, complete, edit, dele
 - useReducer
 - ESLint
 
+## Screenshots
+
+
+### Desktop View
+
+![Todo List Desktop View](screenshots/desktop.png)
+
+### Mobile View
+
+![Todo List Mobile View](screenshots/mobile.png)
 ## Project Structure
 
 ```text
@@ -65,7 +85,7 @@ Make sure you have Node.js and npm installed.
 Clone the repository and move into the project directory:
 
 ```bash
-git clone YOUR_GITHUB_REPOSITORY_URL
+git clone https://github.com/Noor-1994/todo-list.git
 cd todo-list
 ```
 
@@ -99,14 +119,21 @@ Run the production build locally:
 npm run preview
 ```
 
+## Available Scripts
+
+- `npm run dev` — Starts the Vite development server.
+- `npm run build` — Creates a production build.
+- `npm run preview` — Runs the production build locally for testing.
+- `npm run lint` — Checks the project for linting issues.
+
 ## Validation and Security
 
 The application validates todo titles before submission.
 
 Todo titles must:
 
-- contain at least one non-whitespace character
-- be no longer than 100 characters
+- Contain at least one non-whitespace character
+- Be no longer than 100 characters
 
 The application provides user-friendly error messages without exposing internal system details.
 
@@ -171,6 +198,22 @@ The application includes the following routes:
 
 The Todos and Profile routes require authentication.
 
+## Design Decisions
+
+The application uses custom CSS to create a clean and consistent visual design.
+
+The styling focuses on:
+
+- Consistent spacing and typography
+- Clear visual hierarchy
+- Responsive layouts
+- Card-based interface elements
+- Accessible focus states
+- User-friendly forms and controls
+- Mobile and tablet usability
+
+Additional design details are documented in `STYLE_DOCUMENTATION.md`.
+
 ## Development Notes
 
 This project evolved throughout the React curriculum from a basic Todo List into a more complete application.
@@ -190,7 +233,7 @@ The project now includes:
 
 ## Quality Checks
 
-The following checks were completed during final testing:
+Final testing includes:
 
 ```bash
 npm run lint
@@ -199,7 +242,9 @@ npm run preview
 npm audit
 ```
 
-The project passed linting and production build checks, and the dependency audit reported zero known vulnerabilities at the time of testing.
+Linting and production build checks are used to verify code quality and ensure that the application can be built successfully.
+
+Dependency audit results are reviewed separately so dependency changes are not applied automatically without checking their impact on the project.
 
 ## Final QA
 
@@ -217,6 +262,7 @@ The following functionality was tested:
 - Form validation
 - Navigation
 - Protected routes
+- Authentication state after page refresh
 - 404 page
 - Error handling and user feedback
 - Mobile responsive layout
@@ -225,11 +271,15 @@ The following functionality was tested:
 - Production build
 - Production preview
 
-## Known Limitation
+## Future Improvements
 
-During final testing, refreshing a protected `/todos` or `/profile` page returns the user to the login page because the current authentication state is held in React state and is not restored after a browser refresh.
+Possible future improvements include:
 
-This behavior was identified during final QA and is being reviewed separately.
+- Add automated tests for critical components
+- Add a dark/light theme toggle
+- Add drag-and-drop todo reordering
+- Continue improving accessibility
+- Expand user profile functionality
 
 ## Portfolio Presentation
 
@@ -246,7 +296,7 @@ This project was completed as part of the Code the Dream React curriculum with a
 
 Lesson 11 requires a 3–5 minute video demonstration of the final application.
 
-The demonstration should include:
+The demonstration includes:
 
 - Login and authentication
 - Navigation
@@ -259,20 +309,14 @@ The demonstration should include:
 - The most challenging part of the project
 - What was most enjoyable to work on
 
-Add the video link after recording:
+**Demo Video:** Coming soon
 
-**Demo Video:** `ADD_VIDEO_LINK_HERE`
+## License
 
-## GitHub Repository
+This project was created for educational purposes as part of the Code the Dream React curriculum.
 
-Add your public GitHub repository link here:
+Unless otherwise specified, the project can be used for educational and portfolio purposes.
 
-**GitHub Repository:** `ADD_GITHUB_REPOSITORY_URL_HERE`
+## Contact
 
-## Live Application
-
-Deployment is optional for Lesson 11.
-
-If the application is deployed, add the live URL here:
-
-**Live Application:** `ADD_LIVE_APPLICATION_URL_HERE`
+**GitHub:** https://github.com/Noor-1994
