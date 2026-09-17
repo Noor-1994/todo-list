@@ -6,9 +6,9 @@ The application allows authenticated users to create, view, complete, edit, dele
 
 ## Live Demo
 
-Deployment will be added after the application is deployed to Vercel.
+The application is deployed on Vercel.
 
-**Live Application:** Coming soon
+**Live Application:** https://todo-list-dusky-five-93.vercel.app
 
 ## GitHub Repository
 
