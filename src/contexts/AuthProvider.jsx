@@ -63,13 +63,13 @@ export function AuthProvider({ children }) {
         error:
           data?.message || 'Authentication failed',
       };
-    } catch (error) {
+    } catch {
       return {
         success: false,
-        error: `Error: ${error.name} | ${error.message}`,
+        error: 'Unable to sign in. Please try again.',
       };
     }
-  }``
+  }
 
   async function logout() {
     try {
@@ -99,7 +99,7 @@ export function AuthProvider({ children }) {
         success: true,
         data,
       };
-    } catch (error) {
+    } catch {
       setName('');
       setEmail('');
       setToken('');
@@ -107,7 +107,7 @@ export function AuthProvider({ children }) {
 
       return {
         success: false,
-        error: `Error: ${error.name} | ${error.message}`,
+        error: 'Unable to log out. Please try again.',
       };
     }
   }
