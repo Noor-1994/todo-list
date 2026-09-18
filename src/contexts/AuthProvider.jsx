@@ -1,10 +1,20 @@
 import { useState } from 'react';
 import { AuthContext } from './AuthContext';
 
+const savedAuth = sessionStorage.getItem('todo-auth');
+
+const initialAuth = savedAuth
+  ? JSON.parse(savedAuth)
+  : {
+      name: '',
+      email: '',
+      token: '',
+    };
+
 export function AuthProvider({ children }) {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [token, setToken] = useState('');
+  const [name, setName] = useState(initialAuth.name);
+  const [email, setEmail] = useState(initialAuth.email);
+  const [token, setToken] = useState(initialAuth.token);
 
   const isAuthenticated = Boolean(token);
 
@@ -33,6 +43,15 @@ export function AuthProvider({ children }) {
         setEmail(email);
         setToken(data.csrfToken);
 
+        sessionStorage.setItem(
+          'todo-auth',
+          JSON.stringify({
+            name: data.name,
+            email,
+            token: data.csrfToken,
+          })
+        );
+
         return {
           success: true,
           data,
@@ -44,10 +63,10 @@ export function AuthProvider({ children }) {
         error:
           data?.message || 'Authentication failed',
       };
-    } catch (error) {
+    } catch {
       return {
         success: false,
-        error: `Error: ${error.name} | ${error.message}`,
+        error: 'Unable to sign in. Please try again.',
       };
     }
   }
@@ -67,6 +86,7 @@ export function AuthProvider({ children }) {
       setName('');
       setEmail('');
       setToken('');
+      sessionStorage.removeItem('todo-auth');
 
       if (!response.ok) {
         return {
@@ -79,14 +99,15 @@ export function AuthProvider({ children }) {
         success: true,
         data,
       };
-    } catch (error) {
+    } catch {
       setName('');
       setEmail('');
       setToken('');
+      sessionStorage.removeItem('todo-auth');
 
       return {
         success: false,
-        error: `Error: ${error.name} | ${error.message}`,
+        error: 'Unable to log out. Please try again.',
       };
     }
   }

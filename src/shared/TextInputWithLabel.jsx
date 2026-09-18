@@ -4,10 +4,13 @@ function TextInputWithLabel({
   onChange,
   ref,
   value,
+  maxLength,
 }) {
   return (
     <>
-      <label htmlFor={elementId}>{labelText}</label>
+      <label htmlFor={elementId}>
+        {labelText}
+      </label>
 
       <input
         type="text"
@@ -15,6 +18,7 @@ function TextInputWithLabel({
         ref={ref}
         value={value}
         onChange={onChange}
+        maxLength={maxLength}
       />
     </>
   );

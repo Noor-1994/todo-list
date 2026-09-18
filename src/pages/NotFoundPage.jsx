@@ -5,42 +5,60 @@ function NotFoundPage() {
   const { isAuthenticated } = useAuth();
 
   return (
-    <main>
-      <h2>404 - Page Not Found</h2>
+    <main className="page-container not-found-page">
+      <section className="not-found-card">
+        <p className="eyebrow">Error 404</p>
 
-      <p>
-        Sorry, the page you are looking for does not exist.
-      </p>
+        <h1>Page Not Found</h1>
 
-      <p>Where would you like to go?</p>
+        <p className="not-found-description">
+          Sorry, the page you are looking for does not exist.
+        </p>
 
-      <ul>
-        <li>
-          <Link to="/">Home</Link>
-        </li>
+        <p className="not-found-question">
+          Where would you like to go?
+        </p>
 
-        <li>
-          <Link to="/about">About</Link>
-        </li>
+        <nav
+          className="not-found-navigation"
+          aria-label="404 navigation"
+        >
+          <Link className="secondary-button" to="/">
+            Home
+          </Link>
 
-        {isAuthenticated && (
-          <>
-            <li>
-              <Link to="/todos">Todos</Link>
-            </li>
+          <Link className="secondary-button" to="/about">
+            About
+          </Link>
 
-            <li>
-              <Link to="/profile">Profile</Link>
-            </li>
-          </>
-        )}
+          {isAuthenticated && (
+            <>
+              <Link
+                className="secondary-button"
+                to="/todos"
+              >
+                Todos
+              </Link>
 
-        {!isAuthenticated && (
-          <li>
-            <Link to="/login">Log In</Link>
-          </li>
-        )}
-      </ul>
+              <Link
+                className="secondary-button"
+                to="/profile"
+              >
+                Profile
+              </Link>
+            </>
+          )}
+
+          {!isAuthenticated && (
+            <Link
+              className="primary-button not-found-login"
+              to="/login"
+            >
+              Log In
+            </Link>
+          )}
+        </nav>
+      </section>
     </main>
   );
 }
