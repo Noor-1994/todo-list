@@ -292,7 +292,7 @@ This project was completed as part of the Code the Dream React curriculum with a
 - Clean component organization
 - User-friendly feedback
 
-## Demo Video
+**Demo Video:** https://youtu.be/IxZqT2WuoRQ
 
 Lesson 11 requires a 3–5 minute video demonstration of the final application.
 
